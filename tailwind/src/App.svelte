@@ -1,8 +1,18 @@
 <script defer>
     import {onMount, SvelteComponent} from "svelte";
+    import axios from 'axios';
     import L from "leaflet"
 
     let map;
+    let valeur;
+    let result = {
+        ip:"",
+        location:"",
+        timezone:"",
+        isp:""
+
+    }
+    let isValid = true;
     let icon = L.icon(
         {
             iconUrl: './assets/icon-location.svg',
@@ -20,14 +30,22 @@
         L.marker([45.49452, -73.82419], {icon:icon}).addTo(map)
     })
 
+    const handleClick = async() =>{
+        isValid = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(valeur);
+        if(isValid){
+            const resultat = await axios.get(`http://localhost:3000/ip/${valeur}`)
+            console.log(resultat);
+        }
+    }
+
 </script>
 
 <div>
     <div class="hero">
         <h1>IP Address Tracker</h1>
         <div class="search">
-            <input type="text" placeholder="Search for any IP address or domain">
-            <button class="bg-black">
+            <input type="text" placeholder="Search for any IP address or domain" bind:value={valeur}>
+            <button class="bg-black" on:click={handleClick}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="11" height="14"><path fill="none" stroke="#FFF" stroke-width="3" d="M2 1l6 6-6 6"/></svg>
             </button>
         </div>
@@ -59,9 +77,24 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css"
       integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
       crossorigin=""/>
+    
+      {#if !isValid}
+        <style>
+            .search::after{
+                content: "the address Ip is Invalid";
+                color: red;
+                font-size: 1.2rem;
+                position: absolute;
+                bottom: -20px;
+                width: 100%;
+                text-align: center;
+            }
+        </style>
+      {/if}
 <style>
     .hero{
-        background-image: url("assets/pattern-bg.png");
+        background-image: url("../assets/pattern-bg.png");
+        background-size: cover;
         height: 280px;
         width: 100vw;
         display: flex;
@@ -69,6 +102,9 @@
         padding-top: 33px;
         flex-direction: column;
         align-items: center;
+    }
+    .hero h1{
+        color: white;
     }
     input{
         width: 500px;
@@ -83,6 +119,15 @@
         border: 0;
         padding-left: 24px;
     }
+    input:focus, input:focus-visible, input:focus-within,input:focus + button, input:focus-visible + button, input:focus-within + button{
+        outline: none;
+        border:1px solid rgba(81, 203, 238, 1);
+        box-shadow:0 0 5px rgba(81, 203, 238, 1);
+        border-right: 0;
+    }
+    input:focus + button, input:focus-visible + button, input:focus-within + button{
+        border-left: 0;
+    }
     button{
         background-color: black;
         width: 48px;
@@ -93,6 +138,7 @@
     .search{
         display: flex;
         height: 58px;
+        position: relative;
     }
     .infos{
         display: flex;
