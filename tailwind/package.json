@@ -6,7 +6,7 @@
     "build": "rollup -c",
     "serve": "nodemon src/app.js",
     "dev": "concurrently --kill-others \"npm run serve\"   \"npm run bus\" \"npm run start\"",
-    "bus":"rollup -c -w",
+    "bus": "rollup -c -w",
     "start": "sirv public --no-clear --host"
   },
   "devDependencies": {
@@ -23,6 +23,7 @@
     "axios": "^1.2.6",
     "concurrently": "^7.6.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "leaflet": "^1.9.3",
     "nodemon": "^2.0.20",

@@ -2,11 +2,11 @@ const express = require("express")
 const axios= require("axios")
 const app = express()
 const cors = require('cors');
+require("dotenv").config();
 app.use(cors());
+const API_KEY = process.env.API_KEY;
 app.get('/ip/:ip', async (req, res) => {
-    console.log("arrive")
     let ip = req.params.ip;
-    console.log(req.socket.remoteAddress);
     let isValid = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ip);
     if(!isValid){
         res.status(400);
@@ -19,10 +19,11 @@ app.get('/ip/:ip', async (req, res) => {
                 }
             }
         )
+        console.log(ip)
+        return;
     }
     try{
-        const infos = await axios.get(`https://geo.ipify.org/api/v2/country?apiKey=&ipAddress=${ip}`)
-        
+        const infos = await axios.get(`https://geo.ipify.org/api/v2/country,city,vpn?apiKey=${API_KEY}&ipAddress=${ip}`)
         res.send(infos.data)
 
     }catch(error){
