@@ -54,6 +54,7 @@
     async function findInfos(ipAddr){
         isValid = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipAddr);
         try {
+            let g = "https://ip-finder-rpyb.vercel.app//api/ip/8.8.8.8"
             const response = await axios.get(`http://localhost:3000/ip/${ipAddr}`);
             let  data = response.data;
             result.ip = data.ip;
