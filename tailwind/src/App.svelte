@@ -34,6 +34,7 @@
         try {
             const response = await fetch("https://api.ipify.org?format=json");
             const data = await response.json();
+            console.log(data.ip)
             await findInfos(data.ip)
         } catch (error) {
             console.error(error);
